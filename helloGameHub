@@ -1,0 +1,51 @@
+#!/bin/bash
+
+NWJS_LINUX=node-webkit-v0.11.6-linux-x64
+NWJS_MAC=node-webkit-v0.11.6-osx-x64
+NWJS_LINUX_FILENAME=$NWJS_LINUX.tar.gz
+NWJS_MAC_FILENAME=$NWJS_MAC.zip
+NWJS_DL_BASE_URL=http://dl.nwjs.io/v0.11.6
+NWJS_DL_URL=$NWJS_DL_BASE_URL/$NWJS_LINUX_FILENAME
+NWJS_PACKAGE_FILE=$NWJS_LINUX_FILENAME
+NWJS_LOC=$NWJS_LINUX
+
+#download function
+function download_package {
+    mkdir dl >/dev/null 2>&1
+    pushd dl
+    if [ ! -f $NWJS_PACKAGE_FILE ]; then
+        echo "Downloading NW.js"
+        curl -O $NWJS_DL_URL
+    fi
+    popd
+}
+
+function extract_package {
+    if [ "$(uname -s)" != 'Linux' ]; then
+        unzip dl/$NWJS_MAC_FILENAME
+    else
+        tar -xf dl/$NWJS_LINUX_FILENAME
+    fi
+}
+
+#Reconfigure environment if we are on Mac
+if [ "$(uname -s)" != 'Linux' ]; then
+    NWJS_DL_URL=$NWJS_DL_BASE_URL/$NWJS_MAC_FILENAME
+    NWJS_PACKAGE_FILE=$NWJS_MAC_FILENAME
+    NWJS_LOC=$NWJS_MAC
+fi
+
+#Extract package if neccesary
+if [ ! -d $NWJS_LOC ]; then
+    download_package
+    extract_package
+fi
+
+
+#Uncompress package
+if [ ! -d $NWJS_LINUX -a ! -d $NWJS_MAC ]; then
+    echo "not dir"
+else
+    echo "is dir"
+fi
+
