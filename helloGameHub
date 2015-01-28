@@ -1,13 +1,16 @@
 #!/bin/bash
 
-NWJS_LINUX=node-webkit-v0.11.6-linux-x64
-NWJS_MAC=node-webkit-v0.11.6-osx-x64
-NWJS_LINUX_FILENAME=$NWJS_LINUX.tar.gz
-NWJS_MAC_FILENAME=$NWJS_MAC.zip
+NWJS_LINUX_DIR=node-webkit-v0.11.6-linux-x64
+NWJS_MAC_DIR=node-webkit-v0.11.6-osx-x64
+NWJS_LINUX_FILENAME=$NWJS_LINUX_DIR.tar.gz
+NWJS_MAC_FILENAME=$NWJS_MAC_DIR.zip
 NWJS_DL_BASE_URL=http://dl.nwjs.io/v0.11.6
 NWJS_DL_URL=$NWJS_DL_BASE_URL/$NWJS_LINUX_FILENAME
 NWJS_PACKAGE_FILE=$NWJS_LINUX_FILENAME
-NWJS_LOC=$NWJS_LINUX
+NWJS_LOC=$NWJS_LINUX_DIR
+NWJS_LINUX=nw
+NWJS_MAC=node-webkit.app/Contents/MacOS/node-webkit
+NWJS=$NWJS_LINUX
 APP_NAME=app.nw
 
 #download function
@@ -34,7 +37,8 @@ function extract_package {
 if [ "$(uname -s)" != 'Linux' ]; then
     NWJS_DL_URL=$NWJS_DL_BASE_URL/$NWJS_MAC_FILENAME
     NWJS_PACKAGE_FILE=$NWJS_MAC_FILENAME
-    NWJS_LOC=$NWJS_MAC
+    NWJS_LOC=$NWJS_MAC_DIR
+    NWJS=$NWJS_MAC
 fi
 
 #Extract package if neccesary
@@ -47,7 +51,7 @@ fi
 zip app.nw index.html package.json
 
 #Run App
-$NWJS_LOC/nw $APP_NAME
+$NWJS_LOC/$NWJS $APP_NAME
 if [ $? -eq 0 ]; then
     echo "OK"
 else
